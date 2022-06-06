@@ -138,6 +138,8 @@ This function should only modify configuration layer settings."
      ;; `g r' menu in Emacs normal state
      multiple-cursors
 
+     osx
+
      ;; Spacemacs Org mode
      (org :variables
           org-enable-github-support t
