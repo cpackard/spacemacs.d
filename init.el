@@ -143,6 +143,13 @@ This function should only modify configuration layer settings."
           org-journal-time-format ""
           org-journal-carryover-items "TODO=\"TODO\"|TODO=\"DOING\"|TODO=\"BLOCKED\"|TODO=\"REVIEW\"")
 
+     (python :variables
+             python-backend 'lsp
+             python-test-runner 'pytest
+             python-formatter 'black
+             python-save-before-test t
+             python-fill-column 120
+             python-sort-imports-on-save t)
 
      ;; Text-based file manager with preview - SPC a t r r
      (ranger :variables
