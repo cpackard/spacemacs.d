@@ -157,8 +157,10 @@ This function should only modify configuration layer settings."
 
      (python :variables
              python-backend 'lsp
+             python-lsp-server 'pyright
              python-test-runner 'pytest
              python-formatter 'black
+             python-format-on-save t
              python-save-before-test t
              python-fill-column 120
              python-sort-imports-on-save t)
