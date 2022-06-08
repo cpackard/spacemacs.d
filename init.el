@@ -117,6 +117,12 @@ This function should only modify configuration layer settings."
           lsp-ui-doc-enable nil       ;; disable all doc popups
           lsp-ui-sideline-enable nil  ;; disable sideline bar for less distraction
           treemacs-space-between-root-nodes nil  ;; no spacing in treemacs views
+          :config
+          (lsp-register-custom-settings
+           '(("pyls.plugins.pyls_mypy.enabled" t t)
+             ("pyls.plugins.pyls_mypy.live_mode" t t)
+             ("pyls.plugins.pyls_black.enabled" t t)
+             ("pyls.plugins.pyls_isort.enabled" t t)))
           )
 
      (markdown :variables
@@ -145,12 +151,14 @@ This function should only modify configuration layer settings."
 
      (python :variables
              python-backend 'lsp
-             python-lsp-server 'pyright
+             python-lsp-server 'pylsp
              python-test-runner 'pytest
              python-formatter 'black
              python-format-on-save t
              python-save-before-test t
              python-fill-column 120
+             python-auto-set-local-pyenv-version 'on-project-visit
+             python-auto-set-local-pyvenv-virtualenv 'on-project-visit
              python-sort-imports-on-save t)
 
      ;; Text-based file manager with preview - SPC a t r r
@@ -749,6 +757,9 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+  ;; Python
+  (with-eval-after-load 'flycheck
+    (flycheck-add-next-checker 'python-flake8 '(t . python-mypy)))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Keeping Helm history clean
