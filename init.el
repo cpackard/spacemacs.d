@@ -84,6 +84,11 @@ This function should only modify configuration layer settings."
      ;; https://develop.spacemacs.org/layers/+lang/csv/README.html
      csv
 
+     django
+
+     (docker :variables
+             docker-dockerfile-backend 'lsp)
+
      ;; For Spacemacs configuration files and packages
      emacs-lisp
 
@@ -108,21 +113,35 @@ This function should only modify configuration layer settings."
            helm-follow-mode-persistent t)
 
      html
-     javascript
+     (javascript :variables
+                 js2-mode-show-strict-warnings nil
+                 javascript-import-tool 'import-js
+                 javascript-fmt-tool 'web-beautify
+                 javascript-fmt-on-save t
+                 js2-basic-offset 2
+                 js-indent-level 2
+                 node-add-modules-path t
+                 js2-include-node-externs t
+                 javascript-backend 'lsp
+                 js2-mode-show-strict-warnings nil
+                 js2-mode-show-parse-errors nil
+                 js2-mode-show-strict-warnings nil)
      json
 
      ;; Language server protocol with minimal visual impact
      ;; https://practical.li/spacemacs/install-spacemacs/clojure-lsp/
      (lsp :variables
-          lsp-ui-doc-enable nil       ;; disable all doc popups
-          lsp-ui-sideline-enable nil  ;; disable sideline bar for less distraction
+          lsp-ui-doc-enable t ;; disable all doc popups
+          lsp-ui-sideline-enable t ;; disable sideline bar for less distraction
           treemacs-space-between-root-nodes nil  ;; no spacing in treemacs views
+          lsp-use-lsp-ui t
+          lsp-lens-enable t ;; displays extra information of the source code, and allows you to perform certain actions
+          lsp-file-watch-threshold 10000
           :config
           (lsp-register-custom-settings
-           '(("pyls.plugins.pyls_mypy.enabled" t t)
-             ("pyls.plugins.pyls_mypy.live_mode" t t)
-             ("pyls.plugins.pyls_black.enabled" t t)
-             ("pyls.plugins.pyls_isort.enabled" t t)))
+           '(("pylsp.plugins.black.enabled" t t)
+             ("pylsp.plugins.black.line_length" 120 t)
+             ("pylsp.plugins.mypy.enabled" t t)))
           )
 
      (markdown :variables
@@ -157,8 +176,8 @@ This function should only modify configuration layer settings."
              python-format-on-save t
              python-save-before-test t
              python-fill-column 120
-             python-auto-set-local-pyenv-version 'on-project-visit
-             python-auto-set-local-pyvenv-virtualenv 'on-project-visit
+             python-auto-set-local-pyenv-version 'on-visit ;'on-project-visit
+             python-auto-set-local-pyvenv-virtualenv 'on-visit ;'on-project-visit
              python-sort-imports-on-save t)
 
      ;; Text-based file manager with preview - SPC a t r r
@@ -238,7 +257,7 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(keycast)
+   dotspacemacs-additional-packages '(keycast with-venv)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -402,12 +421,21 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
 
-   dotspacemacs-themes '(doom-gruvbox-light
-                         doom-solarized-light
-                         doom-sourcerer
-                         kaolin-valley-dark
-                         doom-solarized-dark
-                         spacemacs-light
+   ;; high-energy pair: `tsdh-light' and `tsdh-dark'
+   ;; bold/accent pair: `spacemacs-light' and `spacemacs-dark'
+
+   ;; light theme favorites ;;
+   ; best for low eye-strain: `doom-gruvbox-light'
+   ; best contrast: `leuven', `adwaita'
+   ; best for editing: `spacemacs-light'
+   ; best cool colors: `kaolin-breeze'
+
+   ;; dark theme favorites ;;
+   ; best high energy: `doom-fairy-floss'
+   ; best contrast: `misterioso'
+   ; best long-working: `spacemacs-dark'
+
+   dotspacemacs-themes '(spacemacs-light
                          spacemacs-dark)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
@@ -757,9 +785,35 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+  ;; LSP
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
+
   ;; Python
-  (with-eval-after-load 'flycheck
-    (flycheck-add-next-checker 'python-flake8 '(t . python-mypy)))
+  (require 'with-venv)
+
+  (with-eval-after-load 'dap-mode
+    (progn
+      (setq dap-python-debugger 'debugpy)
+      (defun dap-python--pyenv-executable-find (command)
+        (with-venv (executable-find "python")))
+      (dap-register-debug-template
+       "Custom :: Run pytest (at point)"
+       (list :type "python-test-at-point"
+             :args ""
+             :module "pytest"
+             :request "launch"
+             :name "Python :: Run pytest (at point)"))
+      (add-hook 'dap-stopped-hook
+                (lambda (arg) (call-interactively #'dap-hydra)))
+      )
+    )
+
+  ;; `python-format-on-save' doesn't seem to work - use this to manually format before save.
+  (defun python-lsp-format-before-save-hook ()
+      (lsp-format-buffer))
+
+  (add-hook 'python-mode-hook
+            (lambda () (add-hook 'before-save-hook 'python-lsp-format-before-save-hook nil 'local)))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Keeping Helm history clean
@@ -1153,7 +1207,7 @@ before packages are loaded."
   ;;
   (esh-section esh-git
                "\xf397"  ;  (git branch icon)
-               (magit-get-current-branch)
+               (car (vc-git-branches))
                '(:foreground "maroon"))
   ;;
   ;; (esh-section esh-python
