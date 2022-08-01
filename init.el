@@ -785,6 +785,10 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+  ;; GPG
+  (setf epa-pinentry-mode 'loopback)
+  (setenv "GPG_AGENT_INFO" nil)
+
   ;; LSP
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
