@@ -455,7 +455,6 @@ It should only modify the values of Spacemacs settings."
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Fira Code"
-                               :size 12.0
                                :size 16.0
                                :weight normal
                                :width normal)
@@ -753,7 +752,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq custom-file (file-truename (concat dotspacemacs-directory "emacs-custom-settings.el")))
   (load custom-file)
 
-
   ;; custom theme modification
   ;; spacemacs - overriding default height of modeline
   ;; doom-gruvbox - subtle lsp symbol highlight
@@ -827,8 +825,8 @@ before packages are loaded."
     )
 
   ;; `python-format-on-save' doesn't seem to work - use this to manually format before save.
-  (defun python-lsp-format-before-save-hook ()
-      (lsp-format-buffer))
+  (defun python-format-before-save-hook ()
+    (blacken-buffer))
 
   (add-hook 'python-mode-hook
             (lambda () (add-hook 'before-save-hook 'python-lsp-format-before-save-hook nil 'local)))
