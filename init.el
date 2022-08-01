@@ -803,6 +803,11 @@ before packages are loaded."
 
   ;; dotspacemacs/user-config divided into files
   ;; - comment files to skip loading specific configuration
+
+  ;; GPG
+  (setf epa-pinentry-mode 'loopback)
+  (setenv "GPG_AGENT_INFO" nil)
+
   ;; LSP
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
