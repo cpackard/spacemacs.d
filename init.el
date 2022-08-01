@@ -809,6 +809,19 @@ before packages are loaded."
   (setf epa-pinentry-mode 'loopback)
   (setenv "GPG_AGENT_INFO" nil)
 
+  ;; Slack
+
+  (with-eval-after-load 'slack
+    (slack-register-team
+     :name "onsiteiq"
+     :token (auth-source-pick-first-password
+             :host "onsiteiq.slack.com"
+             :user "christian@onsiteiq.io")
+     :cookie (auth-source-pick-first-password
+              :host "onsiteiq.slack.com"
+              :user "christian@onsiteiq.io^cookie")
+     :subscribed-channels '((prod-dev general))))
+
   ;; LSP
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
