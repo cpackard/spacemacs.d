@@ -456,6 +456,7 @@ It should only modify the values of Spacemacs settings."
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Fira Code"
                                :size 12.0
+                               :size 16.0
                                :weight normal
                                :width normal)
 
