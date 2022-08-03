@@ -824,6 +824,10 @@ before packages are loaded."
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
   ;; Python
+  ;; importmagic.el generates one buffer with the EPC connection for every Python buffer you open.
+  ;; hide these buffers:
+  (add-to-list 'helm-boring-buffer-regexp-list "\\*epc con")
+
   (require 'with-venv)
 
   (with-eval-after-load 'dap-mode
