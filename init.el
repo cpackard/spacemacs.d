@@ -114,21 +114,29 @@ This function should only modify configuration layer settings."
      ;; - remembers use of C-c C-f in helm pop-up
      helm
 
-     html
+     (html :variables
+           css-enable-lsp t
+           less-enable-lsp t
+           scss-enable-lsp t
+           html-enable-lsp t)
      (javascript :variables
                  js2-mode-show-strict-warnings nil
                  javascript-import-tool 'import-js
                  javascript-fmt-tool 'web-beautify
                  javascript-fmt-on-save t
-                 js2-basic-offset 2
-                 js-indent-level 2
+                 ; js2-basic-offset 2
+                 ; js-indent-level 2
                  node-add-modules-path t
                  js2-include-node-externs t
                  javascript-backend 'lsp
-                 js2-mode-show-strict-warnings nil
+                 javascript-lsp-linter nil
                  js2-mode-show-parse-errors nil
                  js2-mode-show-strict-warnings nil)
-     json
+
+     (json :variables
+           json-fmt-tool 'web-beautify
+           json-fmt-on-save t
+           json-backend 'lsp)
 
      ;; Language server protocol with minimal visual impact
      ;; https://practical.li/spacemacs/install-spacemacs/clojure-lsp/
@@ -199,6 +207,8 @@ This function should only modify configuration layer settings."
              ranger-cleanup-eagerly t
              ranger-cleanup-on-disable t
              ranger-ignored-extensions '("mkv" "flv" "iso" "mp4"))
+
+     react
 
      ;; SPC ' runs shell in a popup buffer
      (shell :variables
@@ -1177,14 +1187,19 @@ before packages are loaded."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Web-mode configuration
   ;;
-  ;; Changing auto indent size for languages in html layer (web mode) to 2 (defaults to 4)
   (defun web-mode-indent-2-hook ()
     "Indent settings for languages in Web mode, markup=html, css=css, code=javascript/php/etc."
     (setq web-mode-markup-indent-offset 2)
     (setq web-mode-css-indent-offset  2)
-    (setq web-mode-code-indent-offset 2))
+    (setq web-mode-code-indent-offset 2)
+    (setq web-mode-attr-indent-offset 2)
+    (setq css-indent-offset 2))
   ;;
   (add-hook 'web-mode-hook  'web-mode-indent-2-hook)
+  ;; (with-eval-after-load 'web-mode
+  ;;   (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
+  ;;   (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
+  ;;   (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil)))
   ;;
   ;; End of Web-mode configuration
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
