@@ -241,6 +241,13 @@ This function should only modify configuration layer settings."
      ;; Code in dotspacemacs/user-init to reduce size of modeline
      theming
 
+     (typescript :variables
+                 typescript-fmt-on-save t
+                 typescript-lsp-linter nil
+                 typescript-fmt-tool 'prettier
+                 typescript-linter 'eslint ;'tslint
+                 typescript-backend 'lsp)
+
      ;; Support font ligatures (fancy symbols) in all modes
      ;; 'prog-mode for only programming languages
      ;; including text-mode may cause issues with org-mode and magit
@@ -465,7 +472,7 @@ It should only modify the values of Spacemacs settings."
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Fira Code"
-                               :size 16.0
+                               :size 14.0
                                :weight normal
                                :width normal)
 
