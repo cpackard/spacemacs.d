@@ -55,6 +55,8 @@ This function should only modify configuration layer settings."
                       ;; auto-completion-complete-with-key-sequence "fd"
                       )
 
+     bm
+
      ;; To have auto-completion on as soon as you start typing
      ;; (auto-completion :variables auto-completion-idle-delay nil)
 
