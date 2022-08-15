@@ -53,6 +53,8 @@ This function should only modify configuration layer settings."
                       ;; auto-completion-complete-with-key-sequence "fd"
                       )
 
+     bm
+
      ;; https://develop.spacemacs.org/layers/+lang/clojure/README.html
      (clojure :variables
               ;; clojure-backend 'cider                 ; use cider and disable lsp
