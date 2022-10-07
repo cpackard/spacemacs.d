@@ -870,6 +870,9 @@ before packages are loaded."
   (add-hook 'clojure-mode-hook
             'clojure-format-buffer-hook)
 
+  (setq importmagic-style-configuration-alist
+        '((multiline . parentheses)
+         (max_columns . 120)))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Keeping Helm history clean
