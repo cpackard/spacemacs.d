@@ -878,11 +878,11 @@ before packages are loaded."
     )
 
   ;; `python-format-on-save' doesn't seem to work - use this to manually format before save.
-  (defun python-format-before-save-hook ()
-    (blacken-buffer))
+  ;; (defun python-format-before-save-hook ()
+  ;;   (blacken-buffer))
 
-  (add-hook 'python-mode-hook
-            (lambda () (add-hook 'before-save-hook 'python-lsp-format-before-save-hook nil 'local)))
+  ;; (add-hook 'python-mode-hook
+  ;;           (lambda () (add-hook 'before-save-hook 'python-lsp-format-before-save-hook nil 'local)))
 
   ;; General configuration
   (setq user-config-file (file-truename (concat dotspacemacs-directory "user-config.el")))
