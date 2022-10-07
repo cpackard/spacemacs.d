@@ -277,7 +277,7 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(keycast with-venv)
+   dotspacemacs-additional-packages '(keycast with-venv code-review)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -1015,6 +1015,12 @@ before packages are loaded."
   ;;
   ;; End of Magit - forge configuration
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;; code-review configuration
+  (with-eval-after-load 'code-review
+    (add-hook 'code-review-mode-hook #'emojify-mode)
+    (setq code-review-fill-column 80)
+    (setq code-review-auth-login-marker 'forge))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Safe structural editing
