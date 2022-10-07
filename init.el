@@ -1057,6 +1057,12 @@ before packages are loaded."
     (setq code-review-fill-column 80)
     (setq code-review-auth-login-marker 'forge))
 
+  ;; fix for ediff-compare-wordwise/linewise
+  ;; https://github.com/syl20bnr/spacemacs/issues/12498#issuecomment-522240840
+  (defun bm-adv-without-purpose (fn &rest args)
+    (without-purpose (apply fn args)))
+  (advice-add #'ediff-clone-buffer-for-region-comparison :around #'bm-adv-without-purpose)
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Safe structural editing
   ;; for all major modes
