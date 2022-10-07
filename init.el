@@ -894,6 +894,9 @@ before packages are loaded."
   (add-hook 'clojure-mode-hook
             'clojure-format-buffer-hook)
 
+  (setq importmagic-style-configuration-alist
+        '((multiline . parentheses)
+         (max_columns . 120)))
 
   ;; General configuration
   (setq user-config-file (file-truename (concat dotspacemacs-directory "user-config.el")))
