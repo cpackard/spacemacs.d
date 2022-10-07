@@ -883,6 +883,17 @@ before packages are loaded."
 
   ;; (add-hook 'python-mode-hook
   ;;           (lambda () (add-hook 'before-save-hook 'python-lsp-format-before-save-hook nil 'local)))
+  (defun clojure-sort-imports-hook ()
+    (add-hook 'before-save-hook 'lsp-organize-imports))
+
+  (defun clojure-format-buffer-hook ()
+    (add-hook 'before-save-hook 'lsp-format-buffer))
+
+  (add-hook 'clojure-mode-hook
+            'clojure-sort-imports-hook)
+  (add-hook 'clojure-mode-hook
+            'clojure-format-buffer-hook)
+
 
   ;; General configuration
   (setq user-config-file (file-truename (concat dotspacemacs-directory "user-config.el")))
