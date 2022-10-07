@@ -1211,15 +1211,46 @@ before packages are loaded."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Web-mode configuration
   ;;
+  ;; (setq-default
+  ;;  ;; js2-mode
+  ;;  js2-basic-offset 2
+  ;;  ;; web-mode
+  ;;  css-indent-offset 2
+  ;;  web-mode-markup-indent-offset 2
+  ;;  web-mode-css-indent-offset 2
+  ;;  web-mode-code-indent-offset 2
+  ;;  web-mode-attr-indent-offset 2
+  ;;  web-mode-attr-value-indent-offset 2)
+
   (defun web-mode-indent-2-hook ()
     "Indent settings for languages in Web mode, markup=html, css=css, code=javascript/php/etc."
     (setq web-mode-markup-indent-offset 2)
     (setq web-mode-css-indent-offset  2)
     (setq web-mode-code-indent-offset 2)
     (setq web-mode-attr-indent-offset 2)
+    (setq web-mode-attr-value-indent-offset 2)
+    (setq css-indent-offset 2)
+    (setq js-indent-level 2)
     (setq css-indent-offset 2))
+
+  (with-eval-after-load 'web-mode
+    (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
+    (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
+    (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
+    (add-hook 'web-mode-hook  'web-mode-indent-2-hook))
+
+  (add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . web-mode))
+
+
+  ;; (eval-after-load 'js2-mode
+  ;;   '(add-hook 'js2-mode-hook
+  ;;              (lambda ()
+  ;;                (add-hook 'before-save-hook 'lsp-format-buffer t t))))
+  ;; (add-hook 'js2-mode-hook
+  ;;           (lambda () (add-hook 'before-save-hook 'lsp-format-bffer nil 'local)))
+
   ;;
-  (add-hook 'web-mode-hook  'web-mode-indent-2-hook)
+
   ;; (with-eval-after-load 'web-mode
   ;;   (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
   ;;   (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
