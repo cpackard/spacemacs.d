@@ -455,8 +455,8 @@ It should only modify the values of Spacemacs settings."
    ; best contrast: `misterioso'
    ; best long-working: `spacemacs-dark'
 
-   dotspacemacs-themes '(spacemacs-light
-                         spacemacs-dark)
+   dotspacemacs-themes '(spacemacs-dark
+                         spacemacs-light)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
