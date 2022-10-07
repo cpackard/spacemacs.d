@@ -803,6 +803,10 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  ;; Helm
+  (with-eval-after-load 'helm
+    (setq helm-ff-skip-boring-files t)
+    (setq helm-boring-file-regexp-list (cons "\\.bundle.js$" helm-boring-file-regexp-list)))
 
   ;; GPG
   (setf epa-pinentry-mode 'loopback)
