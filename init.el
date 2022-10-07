@@ -1310,7 +1310,7 @@ before packages are loaded."
   (esh-section esh-dir
                "\xf07c"  ;  (faicon folder)
                (abbreviate-file-name (eshell/pwd))
-               '(:foreground "olive" :bold bold :underline t))
+               '(:foreground "dark olive green" :weight bold :underline t))
   ;;
   (esh-section esh-git
                "\xf397"  ;  (git branch icon)
