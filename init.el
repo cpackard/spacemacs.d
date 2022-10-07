@@ -173,7 +173,8 @@ This function should only modify configuration layer settings."
      ;; `g r' menu in Emacs normal state
      multiple-cursors
 
-     osx
+     (osx :variables
+          osx-command-as 'super)
 
      ;; Spacemacs Org mode
      (org :variables
