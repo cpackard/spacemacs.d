@@ -856,6 +856,7 @@ before packages are loaded."
   ;; importmagic.el generates one buffer with the EPC connection for every Python buffer you open.
   ;; hide these buffers:
   (add-to-list 'helm-boring-buffer-regexp-list "\\*epc con")
+  (setenv "WORKON_HOME" "~/.pyenv/versions")
 
   (require 'with-venv)
 
