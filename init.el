@@ -207,6 +207,13 @@ This function should only modify configuration layer settings."
             shell-default-height 30
             shell-default-position 'bottom)
 
+     (sql :variables
+          sql-backend 'lsp
+          lsp-sqls-workspace-config-path 'root
+          ;; lsp-sqls-connections '(;((driver . "postgresql") (dataSourceName . "host=127.0.0.1 port=5432 user=yyoncho password=local dbname=sammy sslmode=disable"))
+          ;;                        ((driver . "postgresql") (dataSourceName . "host=localhost port=5432 user=core_user password=core_pass_55% dbname=core_db sslmode=disable")))
+          )
+
      ;; spacemacs-layouts layer added to set variables
      ;; SPC TAB restricted to current layout buffers
      ;; Kill buffers when killing layer - SPC l x
