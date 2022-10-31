@@ -187,8 +187,8 @@ This function should only modify configuration layer settings."
              python-format-on-save t
              python-save-before-test t
              python-fill-column 120
-             python-auto-set-local-pyenv-version 'on-visit ;'on-project-visit
-             python-auto-set-local-pyvenv-virtualenv 'on-visit ;'on-project-visit
+             python-auto-set-local-pyenv-version 'on-project-visit ;'on-visit
+             python-auto-set-local-pyvenv-virtualenv 'on-project-visit ;'on-visit
              python-sort-imports-on-save t)
 
      ;; Text-based file manager with preview - SPC a t r r
