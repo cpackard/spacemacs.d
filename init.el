@@ -857,7 +857,8 @@ before packages are loaded."
   ;; Python
   ;; importmagic.el generates one buffer with the EPC connection for every Python buffer you open.
   ;; hide these buffers:
-  (add-to-list 'helm-boring-buffer-regexp-list "\\*epc con")
+  (with-eval-after-load 'helm-mode
+    (add-to-list 'helm-boring-buffer-regexp-list "\\*epc con"))
   (setenv "WORKON_HOME" "~/.pyenv/versions")
 
   (require 'with-venv)
@@ -885,6 +886,7 @@ before packages are loaded."
 
   ;; (add-hook 'python-mode-hook
   ;;           (lambda () (add-hook 'before-save-hook 'python-lsp-format-before-save-hook nil 'local)))
+
   (defun clojure-sort-imports-hook ()
     (add-hook 'before-save-hook 'lsp-organize-imports))
 
