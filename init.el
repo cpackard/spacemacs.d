@@ -244,6 +244,8 @@ This function should only modify configuration layer settings."
      ;; Code in dotspacemacs/user-init to reduce size of modeline
      theming
 
+     themes-megapack
+
      (typescript :variables
                  typescript-fmt-on-save t
                  typescript-lsp-linter nil
@@ -455,8 +457,8 @@ It should only modify the values of Spacemacs settings."
    ; best contrast: `misterioso'
    ; best long-working: `spacemacs-dark'
 
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light)
+   dotspacemacs-themes '(doom-flatwhite
+                         kaolin-shiva)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
