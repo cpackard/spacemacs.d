@@ -57,11 +57,12 @@ This function should only modify configuration layer settings."
 
      ;; https://develop.spacemacs.org/layers/+lang/clojure/README.html
      (clojure :variables
-              ;; clojure-backend 'cider                 ; use cider and disable lsp
-              clojure-enable-kaocha-runner t            ; enable Kaocha test runner
-              cider-repl-display-help-banner nil        ; disable help banner
-              cider-print-fn 'puget                     ; pretty printing with sorted keys / set values
-              clojure-indent-style 'align-arguments
+              ;; clojure-backend 'cider               ;; use cider and disable lsp
+              ;; clojure-enable-linters '(clj-kondo joker)    ;; clj-kondo included in lsp
+              clojure-enable-kaocha-runner t          ;; enable Kaocha test runner
+              cider-repl-display-help-banner nil      ;; disable help banner
+              cider-print-fn 'puget                   ;; pretty printing with sorted keys / set values
+              ; clojure-indent-style 'align-arguments
               clojure-align-forms-automatically t
               clojure-toplevel-inside-comment-form t ; clashes with LSP
               cider-result-overlay-position 'at-point   ; results shown right after expression
@@ -252,6 +253,13 @@ This function should only modify configuration layer settings."
      ;; requires external command - ispell, hunspell, aspell
      ;; SPC S menu, SPC S s to check current word
      spell-checking
+
+     (sql :variables
+          sql-backend 'lsp
+          lsp-sqls-workspace-config-path 'root
+          ;; RIP this never worked 🥲
+          ;; lsp-sqls-connections '(((driver . "postgresql") (dataSourceName . "host=127.0.0.1 port=5432 user=yyoncho password=local dbname=sammy sslmode=disable")))
+          )
 
      ;; Use original flycheck fringe bitmaps
      (syntax-checking :variables
@@ -817,6 +825,15 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; simplifying version control of the Spacemacs configuration file
   (setq custom-file (file-truename (concat dotspacemacs-directory "emacs-custom-settings.el")))
   (load custom-file)
+  ;; custom toggles
+  (defun custom-toggles ()
+    (interactive)
+    (spacemacs/toggle-centered-point-globally-on)
+    (spacemacs/toggle-golden-ratio-on)
+    (spacemacs/toggle-highlight-long-lines-globally-on))
+  (custom-toggles)
+  ;; (spacemacs/toggle-highlight-long-lines 80)
+
 )
 
 (defun dotspacemacs/user-load ()
@@ -844,19 +861,6 @@ before packages are loaded."
   ;; GPG
   (setf epa-pinentry-mode 'loopback)
   (setenv "GPG_AGENT_INFO" nil)
-
-  ;; Slack
-
-  (with-eval-after-load 'slack
-    (slack-register-team
-     :name "onsiteiq"
-     :token (auth-source-pick-first-password
-             :host "onsiteiq.slack.com"
-             :user "christian@onsiteiq.io")
-     :cookie (auth-source-pick-first-password
-              :host "onsiteiq.slack.com"
-              :user "christian@onsiteiq.io^cookie")
-     :subscribed-channels '((prod-dev general))))
 
   ;; LSP
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
