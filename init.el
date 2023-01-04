@@ -850,6 +850,14 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  ;; Custom shortcuts
+  (defun kill-to-bol ()
+    "Kill from point to beginning of line."
+    (interactive)
+    (kill-line 0))
+
+  (global-set-key (kbd "<M-backspace>") 'kill-to-bol)
+
   ;; Helm
   (with-eval-after-load 'helm
     (setq helm-ff-skip-boring-files t)
