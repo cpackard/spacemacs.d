@@ -123,16 +123,16 @@ This function should only modify configuration layer settings."
      (javascript :variables
                  js2-mode-show-strict-warnings nil
                  javascript-import-tool 'import-js
-                 javascript-fmt-tool 'web-beautify
+                 javascript-fmt-tool 'prettier
                  javascript-fmt-on-save t
                  ; js2-basic-offset 2
                  ; js-indent-level 2
                  node-add-modules-path t
                  js2-include-node-externs t
                  javascript-backend 'lsp
-                 javascript-lsp-linter nil
+                 ; javascript-lsp-linter nil
                  js2-mode-show-parse-errors nil
-                 js2-mode-show-strict-warnings nil)
+                 )
 
      (json :variables
            json-fmt-tool 'web-beautify
@@ -179,6 +179,8 @@ This function should only modify configuration layer settings."
           org-journal-time-prefix "* "
           org-journal-time-format ""
           org-journal-carryover-items "TODO=\"TODO\"|TODO=\"DOING\"|TODO=\"BLOCKED\"|TODO=\"REVIEW\"")
+
+     prettier
 
      (python :variables
              python-backend 'lsp
@@ -263,7 +265,7 @@ This function should only modify configuration layer settings."
 
      (typescript :variables
                  typescript-fmt-on-save t
-                 typescript-lsp-linter nil
+                 ; typescript-lsp-linter nil
                  typescript-fmt-tool 'prettier
                  typescript-linter 'eslint ;'tslint
                  typescript-backend 'lsp)
@@ -281,6 +283,8 @@ This function should only modify configuration layer settings."
                       version-control-diff-tool 'diff-hl
                       version-control-global-margin t)
 
+     web-beautify
+
      yaml
 
      ) ;; End of dotspacemacs-configuration-layers
@@ -294,7 +298,7 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(keycast with-venv code-review)
+   dotspacemacs-additional-packages '(keycast with-venv code-review nvm)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -457,6 +461,18 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
+
+   ;; light themes I may like:
+   ;; - `white-sand'
+   ;; - `espresso'
+
+   ;; dark themes I may like:
+   ;; - `twilight-anti-bright' (reminds me of `doom-flatwhite' but in dark mode)
+   ;; - `tangotango' (high contrast)
+   ;; - `tango-2' (another good contrast)
+   ;; - `material'
+   ;; - `kaolin-galaxy'
+   ;; - `hc-zenburn'
 
    ;; high-energy pair: `tsdh-light' and `tsdh-dark'
    ;; bold/accent pair: `spacemacs-light' and `spacemacs-dark'
@@ -848,6 +864,9 @@ before packages are loaded."
 
   ;; LSP
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
+
+  ;; JavaScript
+  (require 'nvm)
 
   ;; Python
   ;; importmagic.el generates one buffer with the EPC connection for every Python buffer you open.
