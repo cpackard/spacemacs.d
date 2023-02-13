@@ -190,8 +190,8 @@ This function should only modify configuration layer settings."
              python-format-on-save t
              python-save-before-test t
              python-fill-column 120
-             python-auto-set-local-pyenv-version 'on-project-visit ;'on-visit
-             python-auto-set-local-pyvenv-virtualenv 'on-project-visit ;'on-visit
+             python-auto-set-local-pyenv-version 'on-visit ;'on-project-visit ;'on-visit
+             python-auto-set-local-pyvenv-virtualenv 'on-visit ;'on-project-visit ;'on-visit
              python-sort-imports-on-save t)
 
      ;; Text-based file manager with preview - SPC a t r r
@@ -602,7 +602,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup nil
 
    ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
@@ -611,7 +611,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup t
+   dotspacemacs-maximized-at-startup nil
 
    ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
    ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
@@ -698,7 +698,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server t
+   dotspacemacs-enable-server nil
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -709,7 +709,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server t
+   dotspacemacs-persistent-server nil
 
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
@@ -862,11 +862,78 @@ before packages are loaded."
   (setf epa-pinentry-mode 'loopback)
   (setenv "GPG_AGENT_INFO" nil)
 
+  ;; SQL
+  ;; https://stackoverflow.com/a/65310225
+  (setq sql-postgres-login-params
+        '())
+
+  (setq sql-connection-alist
+        '((core-api-local (sql-product 'postgres))
+          (core-api-dev (sql-product 'postgres))
+          (core-api-prod-ro (sql-product 'postgres))
+          (core-api-prod (sql-product 'postgres))))
+
+  (defun practicalli/db-connect-sql-server (product connection)
+    ;; remember to set the sql-product, otherwise, it will fail for the first time
+    ;; you call the function
+    (setq sql-product product)
+
+    ;; load the password
+    (require 'cp/database-urls "~/.spacemacs.d/db-connection-secrets.el.gpg")
+
+    ;; update the password to the sql-connection-alist
+    (let ((connection-info (assoc connection sql-connection-alist))
+          (sql-database (car (last (assoc connection cp/database-urls)))))
+      (delete sql-database connection-info)
+      (nconc connection-info `((sql-database ,sql-database)))
+      (setq sql-connection-alist (assq-delete-all connection sql-connection-alist))
+      (add-to-list 'sql-connection-alist connection-info))
+
+    ;; connect to database
+    (setq sql-product product)
+    (sql-connect connection))
+
+  (defun cp/db-connect-core-api-local ()
+    (interactive)
+    (practicalli/db-connect-sql-server 'postgres 'core-api-local))
+
+  (defun cp/db-connect-core-api-dev ()
+    (interactive)
+    (practicalli/db-connect-sql-server 'postgres 'core-api-dev))
+
+  (defun cp/db-connect-core-api-prod-ro ()
+    (interactive)
+    (practicalli/db-connect-sql-server 'postgres 'core-api-prod-ro))
+
+  (defun cp/db-connect-core-api-prod ()
+    (interactive)
+    (practicalli/db-connect-sql-server 'postgres 'core-api-prod))
+
+  (spacemacs/declare-prefix "od" "databases")
+  (spacemacs/set-leader-keys "odl" 'cp/db-connect-core-api-local)
+  (spacemacs/set-leader-keys "odd" 'cp/db-connect-core-api-dev)
+  (spacemacs/set-leader-keys "odp" 'cp/db-connect-core-api-prod-ro)
+  (spacemacs/set-leader-keys "odP" 'cp/db-connect-core-api-prod)
+
+  ;; Slack
+
+  (with-eval-after-load 'slack
+    (slack-register-team
+     :name "onsiteiq"
+     :token (auth-source-pick-first-password
+             :host "onsiteiq.slack.com"
+             :user "christian@onsiteiq.io")
+     :cookie (auth-source-pick-first-password
+              :host "onsiteiq.slack.com"
+              :user "christian@onsiteiq.io^cookie")
+     :subscribed-channels '((prod-dev general))))
+
   ;; LSP
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
   ;; JavaScript
   (require 'nvm)
+  (setq exec-path (cons "/Users/cpackard/.nvm/versions/node/v18.9.0/bin" exec-path))
 
   ;; Python
   ;; importmagic.el generates one buffer with the EPC connection for every Python buffer you open.
@@ -1355,7 +1422,7 @@ before packages are loaded."
                '(:foreground "dark olive green" :weight bold :underline t))
   ;;
   (esh-section esh-git
-               "\xf397"  ;  (git branch icon)
+               "\xf126"  ;  (git branch icon)
                (car (vc-git-branches))
                '(:foreground "maroon"))
   ;;
