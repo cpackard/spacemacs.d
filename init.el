@@ -553,7 +553,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts t
+   dotspacemacs-auto-resume-layouts nil
 
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
@@ -913,7 +913,6 @@ before packages are loaded."
   (spacemacs/set-leader-keys "odl" 'cp/db-connect-core-api-local)
   (spacemacs/set-leader-keys "odd" 'cp/db-connect-core-api-dev)
   (spacemacs/set-leader-keys "odp" 'cp/db-connect-core-api-prod-ro)
-  (spacemacs/set-leader-keys "odP" 'cp/db-connect-core-api-prod)
 
   ;; Slack
 
