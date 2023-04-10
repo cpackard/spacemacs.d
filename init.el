@@ -120,6 +120,10 @@ This function should only modify configuration layer settings."
            less-enable-lsp t
            scss-enable-lsp t
            html-enable-lsp t)
+
+     (with-eval-after-load 'html
+       (add-to-list 'auto-mode-alist '("\\.mjml\\'" . html-mode)))
+
      (javascript :variables
                  js2-mode-show-strict-warnings nil
                  javascript-import-tool 'import-js
