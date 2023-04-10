@@ -122,19 +122,23 @@ This function should only modify configuration layer settings."
            less-enable-lsp t
            scss-enable-lsp t
            html-enable-lsp t)
+
+     (with-eval-after-load 'html
+       (add-to-list 'auto-mode-alist '("\\.mjml\\'" . html-mode)))
+
      (javascript :variables
                  js2-mode-show-strict-warnings nil
                  javascript-import-tool 'import-js
-                 javascript-fmt-tool 'web-beautify
+                 javascript-fmt-tool 'prettier
                  javascript-fmt-on-save t
-                 ; js2-basic-offset 2
-                 ; js-indent-level 2
+                                        ; js2-basic-offset 2
+                                        ; js-indent-level 2
                  node-add-modules-path t
                  js2-include-node-externs t
                  javascript-backend 'lsp
-                 javascript-lsp-linter nil
+                                        ; javascript-lsp-linter nil
                  js2-mode-show-parse-errors nil
-                 js2-mode-show-strict-warnings nil)
+                 )
 
      (json :variables
            json-fmt-tool 'web-beautify
@@ -200,8 +204,8 @@ This function should only modify configuration layer settings."
              python-format-on-save t
              python-save-before-test t
              python-fill-column 120
-             python-auto-set-local-pyenv-version 'on-project-visit ;'on-visit
-             python-auto-set-local-pyvenv-virtualenv 'on-project-visit ;'on-visit
+             python-auto-set-local-pyenv-version 'on-project-visit
+             python-auto-set-local-pyvenv-virtualenv 'on-project-visit
              python-sort-imports-on-save t)
 
      ;; Text-based file manager with preview - SPC a t r r
@@ -224,8 +228,6 @@ This function should only modify configuration layer settings."
      (sql :variables
           sql-backend 'lsp
           lsp-sqls-workspace-config-path 'root
-          ;; lsp-sqls-connections '(;((driver . "postgresql") (dataSourceName . "host=127.0.0.1 port=5432 user=yyoncho password=local dbname=sammy sslmode=disable"))
-          ;;                        ((driver . "postgresql") (dataSourceName . "host=localhost port=5432 user=core_user password=core_pass_55% dbname=core_db sslmode=disable")))
           )
 
      ;; spacemacs-layouts layer added to set variables
@@ -253,13 +255,6 @@ This function should only modify configuration layer settings."
      ;; requires external command - ispell, hunspell, aspell
      ;; SPC S menu, SPC S s to check current word
      spell-checking
-
-     (sql :variables
-          sql-backend 'lsp
-          lsp-sqls-workspace-config-path 'root
-          ;; RIP this never worked 🥲
-          ;; lsp-sqls-connections '(((driver . "postgresql") (dataSourceName . "host=127.0.0.1 port=5432 user=yyoncho password=local dbname=sammy sslmode=disable")))
-          )
 
      ;; Use original flycheck fringe bitmaps
      (syntax-checking :variables
@@ -313,7 +308,16 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(clojure-essential-ref keycast with-venv code-review)
+   dotspacemacs-additional-packages '(
+                                      clojure-essential-ref
+                                      keycast
+                                      with-venv
+                                      code-review
+                                      nvm
+                                      (copilot :location (recipe
+                                                          :fetcher github
+                                                          :repo "zerolfx/copilot.el"
+                                                          :files ("*.el" "dist"))))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -567,7 +571,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts t
+   dotspacemacs-auto-resume-layouts nil
 
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
@@ -616,7 +620,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup nil
 
    ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
@@ -625,7 +629,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default t) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup t
+   dotspacemacs-maximized-at-startup nil
 
    ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
    ;; variable with `dotspacemacs-maximized-at-startup' to obtain fullscreen
@@ -832,8 +836,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
     (spacemacs/toggle-golden-ratio-on)
     (spacemacs/toggle-highlight-long-lines-globally-on))
   (custom-toggles)
-  ;; (spacemacs/toggle-highlight-long-lines 80)
-
 )
 
 (defun dotspacemacs/user-load ()
@@ -850,6 +852,9 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  ;; dotspacemacs/user-config divided into files
+  ;; - comment files to skip loading specific configuration
+
   ;; Custom shortcuts
   (defun kill-to-bol ()
     "Kill from point to beginning of line."
@@ -858,20 +863,87 @@ before packages are loaded."
 
   (global-set-key (kbd "<M-backspace>") 'kill-to-bol)
 
+  ;; Copilot
+  (with-eval-after-load 'company
+    ;; disable inline previews
+    (delq 'company-preview-if-just-one-frontend company-frontends))
+
+  (with-eval-after-load 'copilot
+    (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+    (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion))
+
+  (add-hook 'prog-mode-hook 'copilot-mode)
+
+  (define-key evil-insert-state-map (kbd "C-<tab>") 'copilot-accept-completion-by-word)
+  (define-key evil-insert-state-map (kbd "C-TAB") 'copilot-accept-completion-by-word)
+
   ;; Helm
   (with-eval-after-load 'helm
     (setq helm-ff-skip-boring-files t)
     (setq helm-boring-file-regexp-list (cons "\\.bundle.js$" helm-boring-file-regexp-list)))
 
-  ;; dotspacemacs/user-config divided into files
-  ;; - comment files to skip loading specific configuration
-
   ;; GPG
   (setf epa-pinentry-mode 'loopback)
   (setenv "GPG_AGENT_INFO" nil)
 
+  ;; SQL
+  ;; https://stackoverflow.com/a/65310225
+  (setq sql-postgres-login-params
+        '())
+
+  (setq sql-connection-alist
+        '((core-api-local (sql-product 'postgres))
+          (core-api-dev (sql-product 'postgres))
+          (core-api-prod-ro (sql-product 'postgres))
+          (core-api-prod (sql-product 'postgres))))
+
+  (defun practicalli/db-connect-sql-server (product connection)
+    ;; remember to set the sql-product, otherwise, it will fail for the first time
+    ;; you call the function
+    (setq sql-product product)
+
+    ;; load the password
+    (require 'cp/database-urls "~/.spacemacs.d/db-connection-secrets.el.gpg")
+
+    ;; update the password to the sql-connection-alist
+    (let ((connection-info (assoc connection sql-connection-alist))
+          (sql-database (car (last (assoc connection cp/database-urls)))))
+      (delete sql-database connection-info)
+      (nconc connection-info `((sql-database ,sql-database)))
+      (setq sql-connection-alist (assq-delete-all connection sql-connection-alist))
+      (add-to-list 'sql-connection-alist connection-info))
+
+    ;; connect to database
+    (setq sql-product product)
+    (sql-connect connection))
+
+  (defun cp/db-connect-core-api-local ()
+    (interactive)
+    (practicalli/db-connect-sql-server 'postgres 'core-api-local))
+
+  (defun cp/db-connect-core-api-dev ()
+    (interactive)
+    (practicalli/db-connect-sql-server 'postgres 'core-api-dev))
+
+  (defun cp/db-connect-core-api-prod-ro ()
+    (interactive)
+    (practicalli/db-connect-sql-server 'postgres 'core-api-prod-ro))
+
+  (defun cp/db-connect-core-api-prod ()
+    (interactive)
+    (practicalli/db-connect-sql-server 'postgres 'core-api-prod))
+
+  (spacemacs/declare-prefix "od" "databases")
+  (spacemacs/set-leader-keys "odl" 'cp/db-connect-core-api-local)
+  (spacemacs/set-leader-keys "odd" 'cp/db-connect-core-api-dev)
+  (spacemacs/set-leader-keys "odp" 'cp/db-connect-core-api-prod-ro)
+
   ;; LSP
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
+
+  ;; JavaScript
+  (require 'nvm)
+  (setq exec-path (cons "/Users/cpackard/.nvm/versions/node/v18.9.0/bin" exec-path))
 
   ;; Python
   ;; importmagic.el generates one buffer with the EPC connection for every Python buffer you open.
