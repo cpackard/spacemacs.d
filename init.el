@@ -861,7 +861,7 @@ before packages are loaded."
     (interactive)
     (kill-line 0))
 
-  (global-set-key (kbd "<M-backspace>") 'kill-to-bol)
+  (global-set-key (kbd "<C-backspace>") 'kill-to-bol)
 
   ;; Copilot
   (with-eval-after-load 'company
