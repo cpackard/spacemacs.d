@@ -72,7 +72,7 @@ This function should only modify configuration layer settings."
               clojure-toplevel-inside-comment-form t  ;; evaluate expressions in comment as top level
               cider-result-overlay-position 'at-point ;; results shown right after expression
               cider-overlays-use-font-lock t
-              cider-repl-buffer-size-limit 100        ;; limit lines shown in REPL buffer
+              cider-repl-buffer-size-limit 100000     ;; limit lines shown in REPL buffer
 
               )
 
@@ -492,7 +492,7 @@ It should only modify the values of Spacemacs settings."
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Fira Code"
-                               :size 14.0
+                               :size 13.5
                                :weight normal
                                :width normal)
 
@@ -835,7 +835,7 @@ before packages are loaded."
     (interactive)
     (kill-line 0))
 
-  (global-set-key (kbd "<M-backspace>") 'kill-to-bol)
+  (global-set-key (kbd "<C-backspace>") 'kill-to-bol)
 
   ;; Helm
   (with-eval-after-load 'helm
@@ -854,7 +854,8 @@ before packages are loaded."
   ;; hide these buffers:
   (with-eval-after-load 'helm-mode
     (add-to-list 'helm-boring-buffer-regexp-list "\\*epc con"))
-  (setenv "WORKON_HOME" "~/.pyenv/versions")
+  ;; (setenv "WORKON_HOME" "~/.pyenv/versions")
+  (add-to-list 'exec-path "~/.local/bin") ; for poetry executable
 
   (require 'with-venv)
 
@@ -1336,7 +1337,7 @@ before packages are loaded."
                '(:foreground "dark olive green" :weight bold :underline t))
   ;;
   (esh-section esh-git
-               "\xf397"  ;  (git branch icon)
+               "\xf126"  ;  (git branch icon)
                (car (vc-git-branches))
                '(:foreground "maroon"))
   ;;
